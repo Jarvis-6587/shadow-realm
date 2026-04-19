@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=3 uid="uid://dialogue001"]
+
+[ext_resource type="Script" path="res://scripts/ui/dialogue_box.gd" id="1_dialogue"]
+
+[node name="DialogueBox" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_dialogue")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -120.0
+offset_right = -20.0
+offset_bottom = -10.0
+
+[node name="NameLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 8.0
+offset_right = 300.0
+offset_bottom = 28.0
+text = "NPC"
+
+[node name="TextLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 32.0
+offset_right = 585.0
+offset_bottom = 80.0
+text = "Hello!"
+autowrap_mode = 2
+
+[node name="ContinueLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 380.0
+offset_top = 85.0
+offset_right = 585.0
+offset_bottom = 105.0
+text = "[Space to continue]"
+horizontal_alignment = 2

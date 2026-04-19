@@ -1,0 +1,185 @@
+[gd_scene load_steps=3 format=3 uid="uid://battle001"]
+
+[ext_resource type="Script" path="res://scripts/battle/battle_manager.gd" id="1_battle"]
+[ext_resource type="Script" path="res://scripts/ui/battle_ui.gd" id="2_ui"]
+
+[node name="Battle" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_battle")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.12, 0.08, 0.18, 1)
+
+[node name="BattleField" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 600.0
+offset_bottom = 300.0
+color = Color(0.2, 0.15, 0.25, 1)
+
+[node name="BattleUI" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("2_ui")
+
+[node name="PlayerSprite" type="ColorRect" parent="BattleUI"]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 160.0
+offset_right = 160.0
+offset_bottom = 260.0
+color = Color(0.3, 0.3, 0.8, 1)
+
+[node name="EnemySprite" type="ColorRect" parent="BattleUI"]
+layout_mode = 0
+offset_left = 440.0
+offset_top = 60.0
+offset_right = 520.0
+offset_bottom = 160.0
+color = Color(0.8, 0.3, 0.3, 1)
+
+[node name="PlayerPanel" type="Panel" parent="BattleUI"]
+layout_mode = 0
+offset_left = 340.0
+offset_top = 200.0
+offset_right = 600.0
+offset_bottom = 290.0
+
+[node name="NameLabel" type="Label" parent="BattleUI/PlayerPanel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 5.0
+offset_right = 150.0
+offset_bottom = 25.0
+text = "Monster"
+
+[node name="LevelLabel" type="Label" parent="BattleUI/PlayerPanel"]
+layout_mode = 0
+offset_left = 160.0
+offset_top = 5.0
+offset_right = 250.0
+offset_bottom = 25.0
+text = "Lv.5"
+
+[node name="HPBar" type="ProgressBar" parent="BattleUI/PlayerPanel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 35.0
+offset_right = 250.0
+offset_bottom = 55.0
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="HPLabel" type="Label" parent="BattleUI/PlayerPanel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 60.0
+offset_right = 250.0
+offset_bottom = 80.0
+text = "100/100"
+
+[node name="EnemyPanel" type="Panel" parent="BattleUI"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 300.0
+offset_bottom = 110.0
+
+[node name="NameLabel" type="Label" parent="BattleUI/EnemyPanel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 5.0
+offset_right = 150.0
+offset_bottom = 25.0
+text = "Wild Monster"
+
+[node name="LevelLabel" type="Label" parent="BattleUI/EnemyPanel"]
+layout_mode = 0
+offset_left = 160.0
+offset_top = 5.0
+offset_right = 250.0
+offset_bottom = 25.0
+text = "Lv.5"
+
+[node name="HPBar" type="ProgressBar" parent="BattleUI/EnemyPanel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 35.0
+offset_right = 250.0
+offset_bottom = 55.0
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="MessagePanel" type="Panel" parent="BattleUI"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 320.0
+offset_right = 620.0
+offset_bottom = 390.0
+
+[node name="MessageLabel" type="Label" parent="BattleUI/MessagePanel"]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 10.0
+offset_right = 585.0
+offset_bottom = 60.0
+text = "A wild monster appeared!"
+autowrap_mode = 2
+
+[node name="ActionPanel" type="VBoxContainer" parent="BattleUI"]
+visible = false
+layout_mode = 0
+offset_left = 20.0
+offset_top = 400.0
+offset_right = 620.0
+offset_bottom = 475.0
+
+[node name="HBox" type="HBoxContainer" parent="BattleUI/ActionPanel"]
+layout_mode = 2
+
+[node name="FightBtn" type="Button" parent="BattleUI/ActionPanel/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Fight"
+
+[node name="SoulCardBtn" type="Button" parent="BattleUI/ActionPanel/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Soul Card"
+
+[node name="FleeBtn" type="Button" parent="BattleUI/ActionPanel/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Flee"
+
+[node name="AttackPanel" type="VBoxContainer" parent="BattleUI"]
+visible = false
+layout_mode = 0
+offset_left = 20.0
+offset_top = 400.0
+offset_right = 620.0
+offset_bottom = 475.0
+
+[node name="SoulCardPanel" type="VBoxContainer" parent="BattleUI"]
+visible = false
+layout_mode = 0
+offset_left = 20.0
+offset_top = 400.0
+offset_right = 620.0
+offset_bottom = 475.0
+
+[connection signal="pressed" from="BattleUI/ActionPanel/HBox/FightBtn" to="BattleUI" method="_on_fight_pressed"]
+[connection signal="pressed" from="BattleUI/ActionPanel/HBox/SoulCardBtn" to="BattleUI" method="_on_soul_card_pressed"]
+[connection signal="pressed" from="BattleUI/ActionPanel/HBox/FleeBtn" to="BattleUI" method="_on_flee_pressed"]

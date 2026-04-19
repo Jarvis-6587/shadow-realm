@@ -1,0 +1,232 @@
+[gd_scene load_steps=5 format=3 uid="uid://overworld001"]
+
+[ext_resource type="Script" path="res://scripts/overworld/overworld.gd" id="1_overworld"]
+[ext_resource type="Script" path="res://scripts/overworld/player.gd" id="2_player"]
+[ext_resource type="Script" path="res://scripts/overworld/wild_grass.gd" id="3_grass"]
+[ext_resource type="Script" path="res://scripts/overworld/npc.gd" id="4_npc"]
+
+[sub_resource type="RectangleShape2D" id="player_shape"]
+size = Vector2(14, 14)
+
+[sub_resource type="RectangleShape2D" id="npc_shape"]
+size = Vector2(14, 14)
+
+[sub_resource type="RectangleShape2D" id="grass_shape_1"]
+size = Vector2(192, 128)
+
+[sub_resource type="RectangleShape2D" id="grass_shape_2"]
+size = Vector2(192, 128)
+
+[sub_resource type="RectangleShape2D" id="wall_shape_top"]
+size = Vector2(640, 16)
+
+[sub_resource type="RectangleShape2D" id="wall_shape_bottom"]
+size = Vector2(640, 16)
+
+[sub_resource type="RectangleShape2D" id="wall_shape_left"]
+size = Vector2(16, 480)
+
+[sub_resource type="RectangleShape2D" id="wall_shape_right"]
+size = Vector2(16, 480)
+
+[node name="Overworld" type="Node2D"]
+script = ExtResource("1_overworld")
+
+[node name="Background" type="ColorRect" parent="."]
+offset_right = 640.0
+offset_bottom = 480.0
+color = Color(0.35, 0.55, 0.3, 1)
+
+[node name="TownArea" type="ColorRect" parent="."]
+offset_left = 32.0
+offset_top = 160.0
+offset_right = 288.0
+offset_bottom = 352.0
+color = Color(0.55, 0.5, 0.4, 1)
+
+[node name="TownLabel" type="Label" parent="TownArea"]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 200.0
+offset_bottom = 25.0
+text = "Shadow Town"
+
+[node name="Route1Area" type="ColorRect" parent="."]
+offset_left = 320.0
+offset_top = 32.0
+offset_right = 608.0
+offset_bottom = 224.0
+color = Color(0.25, 0.45, 0.2, 1)
+
+[node name="Route1Label" type="Label" parent="Route1Area"]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 200.0
+offset_bottom = 25.0
+text = "Route 1"
+
+[node name="Route2Area" type="ColorRect" parent="."]
+offset_left = 320.0
+offset_top = 256.0
+offset_right = 608.0
+offset_bottom = 448.0
+color = Color(0.2, 0.4, 0.25, 1)
+
+[node name="Route2Label" type="Label" parent="Route2Area"]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 200.0
+offset_bottom = 25.0
+text = "Route 2"
+
+[node name="Player" type="CharacterBody2D" parent="." groups=["player"]]
+position = Vector2(160, 256)
+collision_layer = 2
+collision_mask = 1
+script = ExtResource("2_player")
+
+[node name="Sprite2D" type="ColorRect" parent="Player"]
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+color = Color(0.2, 0.4, 0.9, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("player_shape")
+
+[node name="RayCast2D" type="RayCast2D" parent="Player"]
+target_position = Vector2(0, 20)
+collision_mask = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player"]
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+zoom = Vector2(2, 2)
+
+[node name="WildGrass_Route1" type="Area2D" parent="."]
+position = Vector2(464, 128)
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("3_grass")
+encounter_rate = 0.12
+route_name = "route_1"
+min_level = 3
+max_level = 7
+
+[node name="GrassVisual1" type="ColorRect" parent="WildGrass_Route1"]
+offset_left = -96.0
+offset_top = -64.0
+offset_right = 96.0
+offset_bottom = 64.0
+color = Color(0.15, 0.5, 0.15, 0.7)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WildGrass_Route1"]
+shape = SubResource("grass_shape_1")
+
+[node name="WildGrass_Route2" type="Area2D" parent="."]
+position = Vector2(464, 352)
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("3_grass")
+encounter_rate = 0.15
+route_name = "route_2"
+min_level = 6
+max_level = 12
+
+[node name="GrassVisual2" type="ColorRect" parent="WildGrass_Route2"]
+offset_left = -96.0
+offset_top = -64.0
+offset_right = 96.0
+offset_bottom = 64.0
+color = Color(0.1, 0.4, 0.1, 0.7)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WildGrass_Route2"]
+shape = SubResource("grass_shape_2")
+
+[node name="Healer_NPC" type="CharacterBody2D" parent="."]
+position = Vector2(128, 220)
+collision_layer = 1
+collision_mask = 0
+script = ExtResource("4_npc")
+npc_name = "Nurse Kisara"
+dialogue_lines = ["Welcome to the Shadow Realm Healing Center!", "Let me restore your monsters to full health."]
+healer = true
+
+[node name="Sprite2D" type="ColorRect" parent="Healer_NPC"]
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+color = Color(1.0, 0.6, 0.7, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Healer_NPC"]
+shape = SubResource("npc_shape")
+
+[node name="Guide_NPC" type="CharacterBody2D" parent="."]
+position = Vector2(200, 280)
+collision_layer = 1
+collision_mask = 0
+script = ExtResource("4_npc")
+npc_name = "Duelist Yuji"
+dialogue_lines = ["Welcome to the Shadow Realm!", "Walk through the tall grass to encounter wild monsters.", "Use Soul Cards to capture them!", "Press Tab to open the menu."]
+healer = false
+
+[node name="Sprite2D" type="ColorRect" parent="Guide_NPC"]
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+color = Color(0.8, 0.7, 0.2, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Guide_NPC"]
+shape = SubResource("npc_shape")
+
+[node name="ShopKeeper_NPC" type="CharacterBody2D" parent="."]
+position = Vector2(80, 310)
+collision_layer = 1
+collision_mask = 0
+script = ExtResource("4_npc")
+npc_name = "Merchant Pegasus"
+dialogue_lines = ["Ah, a fellow collector!", "I would sell you Soul Cards, but my shipment hasn't arrived yet.", "Come back another time!"]
+healer = false
+
+[node name="Sprite2D" type="ColorRect" parent="ShopKeeper_NPC"]
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+color = Color(0.7, 0.5, 0.8, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ShopKeeper_NPC"]
+shape = SubResource("npc_shape")
+
+[node name="Walls" type="Node2D" parent="."]
+
+[node name="TopWall" type="StaticBody2D" parent="Walls"]
+position = Vector2(320, 8)
+collision_layer = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/TopWall"]
+shape = SubResource("wall_shape_top")
+
+[node name="BottomWall" type="StaticBody2D" parent="Walls"]
+position = Vector2(320, 472)
+collision_layer = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/BottomWall"]
+shape = SubResource("wall_shape_bottom")
+
+[node name="LeftWall" type="StaticBody2D" parent="Walls"]
+position = Vector2(8, 240)
+collision_layer = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/LeftWall"]
+shape = SubResource("wall_shape_left")
+
+[node name="RightWall" type="StaticBody2D" parent="Walls"]
+position = Vector2(632, 240)
+collision_layer = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/RightWall"]
+shape = SubResource("wall_shape_right")
