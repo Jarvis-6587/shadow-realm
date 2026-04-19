@@ -75,7 +75,8 @@ func _on_fight_pressed():
 		var atk = MonsterDB.get_attack(player_mon.attacks[i])
 		if atk:
 			var btn = Button.new()
-			btn.text = "%s (%s, Pow:%d)" % [atk.name, TypeChart.get_type_name(atk.type), atk.power]
+			var pow_str = "—" if atk.power == 0 else "Pow:%d" % atk.power
+			btn.text = "%s (%s, %s)" % [atk.name, TypeChart.get_type_name(atk.type), pow_str]
 			var idx = i
 			btn.pressed.connect(func(): _on_attack_btn(idx))
 			attack_panel.add_child(btn)
@@ -156,7 +157,8 @@ func show_move_replace_choice(mon: GameData.MonsterInstance, new_attack_id: Stri
 		var atk = MonsterDB.get_attack(mon.attacks[i])
 		if atk:
 			var btn = Button.new()
-			btn.text = "Forget %s (%s, Pow:%d)" % [atk.name, TypeChart.get_type_name(atk.type), atk.power]
+			var pow_str2 = "—" if atk.power == 0 else "Pow:%d" % atk.power
+			btn.text = "Forget %s (%s, %s)" % [atk.name, TypeChart.get_type_name(atk.type), pow_str2]
 			var idx = i
 			btn.pressed.connect(func(): _on_forget_btn(idx))
 			attack_panel.add_child(btn)
