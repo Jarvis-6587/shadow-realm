@@ -27,6 +27,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Add coi-serviceworker for SharedArrayBuffer support
+        run: |
+          curl -Lo build/web/coi-serviceworker.min.js https://raw.githubusercontent.com/gzuidhof/coi-serviceworker/master/coi-serviceworker.min.js
+          sed -i 's|<head>|<head><script src="coi-serviceworker.min.js"></script>|' build/web/index.html
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
