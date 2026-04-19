@@ -7,13 +7,15 @@ class AttackData:
 	var power: int
 	var accuracy: int
 	var description: String
+	var effect: String  # "", "heal", "def_buff", "spd_buff"
 
-	func _init(n: String, t: TypeChart.Type, p: int, a: int, d: String):
+	func _init(n: String, t: TypeChart.Type, p: int, a: int, d: String, e: String = ""):
 		name = n
 		type = t
 		power = p
 		accuracy = a
 		description = d
+		effect = e
 
 # Monster species data
 class MonsterSpecies:
@@ -55,7 +57,7 @@ func _init_attacks():
 	_add_attack("divine_wrath", "Divine Wrath", TypeChart.Type.LIGHT, 80, 85, "The fury of the heavens.")
 	_add_attack("light_arrow", "Light Arrow", TypeChart.Type.LIGHT, 60, 95, "A piercing arrow of light.")
 	_add_attack("celestial_beam", "Celestial Beam", TypeChart.Type.LIGHT, 90, 80, "A devastating beam from above.")
-	_add_attack("heal_light", "Healing Light", TypeChart.Type.LIGHT, 0, 100, "Restores HP with holy light.")
+	_add_attack("heal_light", "Healing Light", TypeChart.Type.LIGHT, 0, 100, "Restores HP with holy light.", "heal")
 	_add_attack("radiance", "Radiance", TypeChart.Type.LIGHT, 45, 100, "Glows with blinding light.")
 	_add_attack("white_lightning", "White Lightning", TypeChart.Type.LIGHT, 85, 85, "A bolt of pure white energy.")
 
@@ -76,7 +78,7 @@ func _init_attacks():
 	# Earth attacks
 	_add_attack("rock_smash", "Rock Smash", TypeChart.Type.EARTH, 50, 95, "Smashes with a boulder.")
 	_add_attack("earthquake", "Earthquake", TypeChart.Type.EARTH, 80, 85, "Shakes the ground violently.")
-	_add_attack("stone_wall", "Stone Wall", TypeChart.Type.EARTH, 0, 100, "Raises defense with stone.")
+	_add_attack("stone_wall", "Stone Wall", TypeChart.Type.EARTH, 0, 100, "Raises defense with stone.", "def_buff")
 	_add_attack("earth_spike", "Earth Spike", TypeChart.Type.EARTH, 60, 90, "Spikes erupt from below.")
 	_add_attack("ground_pound", "Ground Pound", TypeChart.Type.EARTH, 45, 100, "Slams the ground hard.")
 
@@ -85,15 +87,15 @@ func _init_attacks():
 	_add_attack("tornado", "Tornado", TypeChart.Type.WIND, 70, 85, "A raging tornado.")
 	_add_attack("air_slash", "Air Slash", TypeChart.Type.WIND, 55, 95, "A blade of compressed air.")
 	_add_attack("cyclone", "Cyclone", TypeChart.Type.WIND, 80, 80, "A devastating cyclone.")
-	_add_attack("tailwind", "Tailwind", TypeChart.Type.WIND, 0, 100, "Boosts speed with wind.")
+	_add_attack("tailwind", "Tailwind", TypeChart.Type.WIND, 0, 100, "Boosts speed with wind.", "spd_buff")
 	_add_attack("dragon_breath", "Dragon Breath", TypeChart.Type.WIND, 65, 90, "A fearsome dragon's breath.")
 
 	# Normal/physical attacks
 	_add_attack("tackle", "Tackle", TypeChart.Type.EARTH, 35, 100, "A basic physical attack.")
 	_add_attack("slash", "Slash", TypeChart.Type.EARTH, 50, 95, "Slashes with claws or blade.")
 
-func _add_attack(id: String, atk_name: String, type: TypeChart.Type, power: int, accuracy: int, desc: String):
-	var atk = AttackData.new(atk_name, type, power, accuracy, desc)
+func _add_attack(id: String, atk_name: String, type: TypeChart.Type, power: int, accuracy: int, desc: String, effect: String = ""):
+	var atk = AttackData.new(atk_name, type, power, accuracy, desc, effect)
 	attacks[id] = atk
 
 func _init_monsters():

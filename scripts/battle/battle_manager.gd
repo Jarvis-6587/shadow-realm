@@ -82,12 +82,27 @@ func execute_attack(attacker: GameData.MonsterInstance, defender: GameData.Monst
 		await get_tree().create_timer(1.0).timeout
 		return
 
-	# Healing attacks
+	# Support attacks (heal / stat buffs)
 	if attack.power == 0:
-		var heal_amount = attacker.max_hp / 4
-		attacker.current_hp = mini(attacker.current_hp + heal_amount, attacker.max_hp)
-		battle_ui.show_message("%s restored some HP!" % attacker_name)
-		add_log("%s used %s and healed!" % [attacker_name, attack.name])
+		match attack.effect:
+			"heal":
+				var heal_amount = attacker.max_hp / 4
+				attacker.current_hp = mini(attacker.current_hp + heal_amount, attacker.max_hp)
+				battle_ui.show_message("%s restored some HP!" % attacker_name)
+				add_log("%s used %s and healed!" % [attacker_name, attack.name])
+			"def_buff":
+				var buff_amount = maxi(attacker.def_stat / 4, 1)
+				attacker.def_stat += buff_amount
+				battle_ui.show_message("%s's defense rose!" % attacker_name)
+				add_log("%s used %s and raised DEF by %d!" % [attacker_name, attack.name, buff_amount])
+			"spd_buff":
+				var buff_amount = maxi(attacker.spd / 4, 1)
+				attacker.spd += buff_amount
+				battle_ui.show_message("%s's speed rose!" % attacker_name)
+				add_log("%s used %s and raised SPD by %d!" % [attacker_name, attack.name, buff_amount])
+			_:
+				battle_ui.show_message("%s used %s!" % [attacker_name, attack.name])
+				add_log("%s used %s!" % [attacker_name, attack.name])
 		await get_tree().create_timer(1.0).timeout
 		battle_ui.update_stats(player_monster, wild_monster)
 		return
