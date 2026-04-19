@@ -72,6 +72,8 @@ class MonsterInstance:
 				if attacks.size() < 4:
 					attacks.append(new_attack)
 					events.append(["new_attack", new_attack])
+				else:
+					events.append(["learn_move_request", new_attack])
 
 			# Check evolution
 			if species and species.evolution_id != "" and level >= species.evolution_level:

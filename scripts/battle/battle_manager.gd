@@ -157,6 +157,27 @@ func on_enemy_defeated():
 				if atk:
 					battle_ui.show_message("%s learned %s!" % [player_monster.nickname, atk.name])
 					await get_tree().create_timer(1.5).timeout
+			"learn_move_request":
+				var new_attack_id = event[1]
+				var new_atk = MonsterDB.get_attack(new_attack_id)
+				var new_atk_name = new_atk.name if new_atk else new_attack_id
+				battle_ui.show_message("%s wants to learn %s, but already knows 4 moves!\nWhich move should be forgotten?" % [player_monster.nickname, new_atk_name])
+				await get_tree().create_timer(2.0).timeout
+				var chosen_slot = -2
+				var callback = func(slot_idx: int): chosen_slot = slot_idx
+				battle_ui.move_to_forget_selected.connect(callback, CONNECT_ONE_SHOT)
+				battle_ui.show_move_replace_choice(player_monster, new_attack_id)
+				while chosen_slot == -2:
+					await get_tree().process_frame
+				if chosen_slot >= 0:
+					var forgotten_atk = MonsterDB.get_attack(player_monster.attacks[chosen_slot])
+					var forgotten_name = forgotten_atk.name if forgotten_atk else player_monster.attacks[chosen_slot]
+					player_monster.attacks[chosen_slot] = new_attack_id
+					battle_ui.show_message("%s forgot %s and learned %s!" % [player_monster.nickname, forgotten_name, new_atk_name])
+					await get_tree().create_timer(2.0).timeout
+				else:
+					battle_ui.show_message("%s did not learn %s." % [player_monster.nickname, new_atk_name])
+					await get_tree().create_timer(1.5).timeout
 			"evolution":
 				battle_ui.show_message("%s evolved!" % player_monster.nickname)
 				battle_ui.update_stats(player_monster, wild_monster)

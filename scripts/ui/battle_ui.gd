@@ -4,6 +4,7 @@ signal attack_selected(attack_idx: int)
 signal soul_card_selected(tier: String)
 signal item_selected(item_name: String)
 signal flee_selected
+signal move_to_forget_selected(slot_idx: int)
 
 var player_mon: GameData.MonsterInstance
 var wild_mon: GameData.MonsterInstance
@@ -140,6 +141,33 @@ func _on_card_btn(tier: String):
 func _on_flee_pressed():
 	action_panel.visible = false
 	flee_selected.emit()
+
+func show_move_replace_choice(mon: GameData.MonsterInstance, new_attack_id: String):
+	action_panel.visible = false
+	attack_panel.visible = false
+	soul_card_panel.visible = false
+	item_panel.visible = false
+	attack_panel.visible = true
+	for child in attack_panel.get_children():
+		child.queue_free()
+	var new_atk = MonsterDB.get_attack(new_attack_id)
+	var new_atk_name = new_atk.name if new_atk else new_attack_id
+	for i in range(mon.attacks.size()):
+		var atk = MonsterDB.get_attack(mon.attacks[i])
+		if atk:
+			var btn = Button.new()
+			btn.text = "Forget %s (%s, Pow:%d)" % [atk.name, TypeChart.get_type_name(atk.type), atk.power]
+			var idx = i
+			btn.pressed.connect(func(): _on_forget_btn(idx))
+			attack_panel.add_child(btn)
+	var skip_btn = Button.new()
+	skip_btn.text = "Don't learn %s" % new_atk_name
+	skip_btn.pressed.connect(func(): _on_forget_btn(-1))
+	attack_panel.add_child(skip_btn)
+
+func _on_forget_btn(slot_idx: int):
+	attack_panel.visible = false
+	move_to_forget_selected.emit(slot_idx)
 
 func shake_sprite(is_enemy: bool):
 	var target = enemy_sprite if is_enemy else player_sprite
