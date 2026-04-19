@@ -211,9 +211,12 @@ func _on_soul_card_selected(tier: String):
 
 	if randf() < catch_chance:
 		battle_active = false
-		battle_ui.show_message("Gotcha! %s was caught!" % wild_monster.nickname)
+		var added_to_team = GameData.add_to_team(wild_monster)
+		if added_to_team:
+			battle_ui.show_message("Gotcha! %s was caught!" % wild_monster.nickname)
+		else:
+			battle_ui.show_message("Gotcha! %s was sent to the Box!" % wild_monster.nickname)
 		add_log("Caught %s with %s Soul Card!" % [wild_monster.nickname, tier])
-		GameData.add_to_team(wild_monster)
 		await get_tree().create_timer(2.0).timeout
 		end_battle()
 	else:

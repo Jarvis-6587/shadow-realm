@@ -149,6 +149,22 @@ func swap_team_monster(from_idx: int, to_idx: int):
 		team[to_idx] = temp
 		team_changed.emit()
 
+func swap_team_and_box(team_idx: int, box_idx: int):
+	if team_idx >= 0 and team_idx < team.size() and box_idx >= 0 and box_idx < monster_box.size():
+		var temp = team[team_idx]
+		team[team_idx] = monster_box[box_idx]
+		monster_box[box_idx] = temp
+		team_changed.emit()
+
+func move_from_box_to_team(box_idx: int) -> bool:
+	if box_idx >= 0 and box_idx < monster_box.size() and team.size() < MAX_TEAM_SIZE:
+		var mon = monster_box[box_idx]
+		monster_box.remove_at(box_idx)
+		team.append(mon)
+		team_changed.emit()
+		return true
+	return false
+
 func get_first_alive_monster() -> MonsterInstance:
 	for mon in team:
 		if mon.is_alive():
