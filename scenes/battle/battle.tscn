@@ -154,6 +154,11 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Fight"
 
+[node name="ItemsBtn" type="Button" parent="BattleUI/ActionPanel/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Items"
+
 [node name="SoulCardBtn" type="Button" parent="BattleUI/ActionPanel/HBox"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -180,6 +185,15 @@ offset_top = 400.0
 offset_right = 620.0
 offset_bottom = 475.0
 
+[node name="ItemPanel" type="VBoxContainer" parent="BattleUI"]
+visible = false
+layout_mode = 0
+offset_left = 20.0
+offset_top = 400.0
+offset_right = 620.0
+offset_bottom = 475.0
+
 [connection signal="pressed" from="BattleUI/ActionPanel/HBox/FightBtn" to="BattleUI" method="_on_fight_pressed"]
+[connection signal="pressed" from="BattleUI/ActionPanel/HBox/ItemsBtn" to="BattleUI" method="_on_item_pressed"]
 [connection signal="pressed" from="BattleUI/ActionPanel/HBox/SoulCardBtn" to="BattleUI" method="_on_soul_card_pressed"]
 [connection signal="pressed" from="BattleUI/ActionPanel/HBox/FleeBtn" to="BattleUI" method="_on_flee_pressed"]

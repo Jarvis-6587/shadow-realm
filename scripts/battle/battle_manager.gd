@@ -18,6 +18,7 @@ func _ready():
 	battle_active = true
 	battle_ui.setup(player_monster, wild_monster)
 	battle_ui.attack_selected.connect(_on_attack_selected)
+	battle_ui.item_selected.connect(_on_item_selected)
 	battle_ui.soul_card_selected.connect(_on_soul_card_selected)
 	battle_ui.flee_selected.connect(_on_flee_selected)
 
@@ -183,6 +184,30 @@ func on_player_monster_fainted():
 		GameData.heal_all_monsters()
 		GameData.current_map = "town"
 		end_battle()
+
+func _on_item_selected(item_name: String):
+	if not battle_active:
+		return
+
+	if not GameData.use_item(item_name):
+		battle_ui.show_message("No %s left!" % item_name.capitalize())
+		await get_tree().create_timer(1.0).timeout
+		battle_ui.show_actions()
+		return
+
+	match item_name:
+		"potion":
+			var heal = 20
+			player_monster.current_hp = mini(player_monster.current_hp + heal, player_monster.max_hp)
+			battle_ui.update_stats(player_monster, wild_monster)
+			battle_ui.show_message("%s restored 20 HP!" % player_monster.nickname)
+			add_log("Used Potion on %s (+20 HP)" % player_monster.nickname)
+		_:
+			battle_ui.show_message("Used %s!" % item_name.capitalize())
+			add_log("Used %s" % item_name.capitalize())
+
+	await get_tree().create_timer(1.0).timeout
+	await enemy_turn()
 
 func _on_soul_card_selected(tier: String):
 	if not battle_active:

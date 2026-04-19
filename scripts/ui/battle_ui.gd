@@ -2,6 +2,7 @@ extends Control
 
 signal attack_selected(attack_idx: int)
 signal soul_card_selected(tier: String)
+signal item_selected(item_name: String)
 signal flee_selected
 
 var player_mon: GameData.MonsterInstance
@@ -11,6 +12,7 @@ var wild_mon: GameData.MonsterInstance
 @onready var action_panel: VBoxContainer = $ActionPanel
 @onready var attack_panel: VBoxContainer = $AttackPanel
 @onready var soul_card_panel: VBoxContainer = $SoulCardPanel
+@onready var item_panel: VBoxContainer = $ItemPanel
 @onready var player_hp_bar: ProgressBar = $PlayerPanel/HPBar
 @onready var player_name_label: Label = $PlayerPanel/NameLabel
 @onready var player_level_label: Label = $PlayerPanel/LevelLabel
@@ -54,11 +56,13 @@ func show_message(text: String):
 	action_panel.visible = false
 	attack_panel.visible = false
 	soul_card_panel.visible = false
+	item_panel.visible = false
 
 func show_actions():
 	action_panel.visible = true
 	attack_panel.visible = false
 	soul_card_panel.visible = false
+	item_panel.visible = false
 
 func _on_fight_pressed():
 	action_panel.visible = false
@@ -82,6 +86,34 @@ func _on_fight_pressed():
 func _on_attack_btn(idx: int):
 	attack_panel.visible = false
 	attack_selected.emit(idx)
+
+func _on_item_pressed():
+	action_panel.visible = false
+	item_panel.visible = true
+	for child in item_panel.get_children():
+		child.queue_free()
+	var has_items = false
+	for item_name in GameData.items:
+		var count = GameData.items.get(item_name, 0)
+		var btn = Button.new()
+		btn.text = "%s (x%d)" % [item_name.capitalize(), count]
+		btn.disabled = count <= 0
+		var iname = item_name
+		btn.pressed.connect(func(): _on_item_btn(iname))
+		item_panel.add_child(btn)
+		has_items = true
+	if not has_items:
+		var lbl = Label.new()
+		lbl.text = "No items!"
+		item_panel.add_child(lbl)
+	var back_btn = Button.new()
+	back_btn.text = "Back"
+	back_btn.pressed.connect(func(): show_actions())
+	item_panel.add_child(back_btn)
+
+func _on_item_btn(item_name: String):
+	item_panel.visible = false
+	item_selected.emit(item_name)
 
 func _on_soul_card_pressed():
 	action_panel.visible = false
