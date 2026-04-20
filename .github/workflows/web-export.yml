@@ -32,7 +32,7 @@ jobs:
           curl -Lo build/web/coi-serviceworker.min.js https://raw.githubusercontent.com/gzuidhof/coi-serviceworker/master/coi-serviceworker.min.js
           sed -i 's|<head>|<head><script src="coi-serviceworker.min.js"></script>|' build/web/index.html
 
-      - name: Patch canvas CSS for fullscreen
+      - name: Patch canvas CSS for aspect-ratio-correct display
         run: |
           python3 - <<'EOF'
           import re
@@ -40,20 +40,20 @@ jobs:
           with open('build/web/index.html', 'r', encoding='utf-8') as f:
               content = f.read()
 
-          # Patch nur den #canvas CSS-Block (gezielt, nicht html/body).
-          # Godot behandelt das Seitenverhaeltnis intern via stretch/mode=viewport + aspect=keep,
-          # daher ist object-fit:contain nicht noetig und kann mit canvasResizePolicy:2 kollidieren.
-          # 100vw/100vh statt 100% fuer berechenbare Viewport-Aufloesung in Flex-Containern.
-          def patch_canvas_block(css_block):
-              css_block = re.sub(r'\n(\t| {2,})object-fit: contain;', '', css_block)
-              css_block = re.sub(r'(\t| {2,})width: 100%;', r'\1width: 100vw;', css_block)
-              css_block = re.sub(r'(\t| {2,})height: 100%;', r'\1height: 100vh;', css_block)
-              return css_block
-
-          # Ersetze nur innerhalb des #canvas { ... } Blocks
+          # Replace the default Godot #canvas rule with aspect-ratio-aware sizing.
+          # width: 100vw + height: 100vh ignores the 4:3 game ratio and causes distortion.
+          # min(100vw, 100vh*4/3) x min(100vh, 100vw*3/4) maintains 4:3 on any screen.
+          correct_canvas_rule = (
+              '#canvas {\n'
+              '\tdisplay: block;\n'
+              '\tmargin: 0 auto;\n'
+              '\twidth: min(100vw, calc(100vh * 4 / 3));\n'
+              '\theight: min(100vh, calc(100vw * 3 / 4));\n'
+              '}'
+          )
           content = re.sub(
-              r'(#canvas \{[^}]*\})',
-              lambda m: patch_canvas_block(m.group(0)),
+              r'#canvas \{[^}]*\}',
+              correct_canvas_rule,
               content,
               flags=re.DOTALL
           )
@@ -61,7 +61,7 @@ jobs:
           with open('build/web/index.html', 'w', encoding='utf-8') as f:
               f.write(content)
 
-          print('Canvas CSS erfolgreich gepatcht.')
+          print('Canvas CSS patched: aspect-ratio-aware sizing applied.')
           EOF
 
       - name: Deploy to GitHub Pages
